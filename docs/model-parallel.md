@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Model Parallel 
+title: Model Parallelism
 nav_order: 2
 has_children: true
 ---
