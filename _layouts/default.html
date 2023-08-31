@@ -21,6 +21,9 @@ layout: table_wrappers
           {% else %}
             {{ content }}
           {% endif %}
+          {% if page.has_children == true and page.has_toc != false %}
+            {% include components/children_nav.html %}
+          {% endif %}
           {% if page.discuss == true %}
             <script src="https://giscus.app/client.js"
                 data-repo="mlsys-paper/mlsys-paper.github.io"
@@ -37,10 +40,6 @@ layout: table_wrappers
                 crossorigin="anonymous"
                 async>
             </script>
-          {% endif %}
-
-          {% if page.has_children == true and page.has_toc != false %}
-            {% include components/children_nav.html %}
           {% endif %}
         </main>
         {% include components/footer.html %}
