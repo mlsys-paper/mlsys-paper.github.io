@@ -32,25 +32,24 @@ layout: table_wrappers
     {% if site.search_enabled != false %}
       {% include components/search_footer.html %}
     {% endif %}
-    <h2>
-        Discussion
-    </h2>
-    <script src="https://giscus.app/client.js"
-        data-repo="mlsys-paper/mlsys-paper.github.io"
-        data-repo-id="R_kgDOKNtA_A"
-        data-category="General"
-        data-category-id="DIC_kwDOKNtA_M4CY_oG"
-        data-mapping="pathname"
-        data-theme="https://giscus.app/themes/custom_example.css"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        crossorigin="anonymous"
-        async>
-    </script>
+    {% if page.discuss == true %}
+      <script src="https://giscus.app/client.js"
+          data-repo="mlsys-paper/mlsys-paper.github.io"
+          data-repo-id="R_kgDOKNtA_A"
+          data-category="General"
+          data-category-id="DIC_kwDOKNtA_M4CY_oG"
+          data-mapping="pathname"
+          data-theme="https://giscus.app/themes/custom_example.css"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          crossorigin="anonymous"
+          async>
+      </script>
+    {% endif %}
   </div>
 
   {% if site.mermaid %}
