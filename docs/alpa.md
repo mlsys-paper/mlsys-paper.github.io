@@ -2,7 +2,7 @@
 layout: default
 parent: Model Parallelism
 title: "Alpa: Automating Inter- and Intra-Operator Parallelism for Distributed Deep Learning"
-nav_order: 2
+nav_order: 1
 ---
 
 # Alpa: Automating Inter- and Intra-Operator Parallelism for Distributed Deep Learning
