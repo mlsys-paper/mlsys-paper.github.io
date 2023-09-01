@@ -18,6 +18,9 @@ discuss: true
 
 作者提出了Cupcake这一通用的压缩优化器, 其核心思想是将多个 Gradient Tensor 融合后一起进行压缩, 而不是对每个 Gradient Tensor 分别压缩. 与传统 DDP 相比, 带梯度压缩的 DDP + Fusion 可以实现高达 2.03 倍的训练吞吐量提升.
 
+![Alt text](image-5.png)
+*Gradient Compression 可以降低通信量*
+
 ## Background
 ### Distributed Data Parallelism 中存在的问题
 
@@ -47,6 +50,9 @@ DDP 训练中存在以下问题:
 ![Alt text](image-4.png)
 *左图为梯度 Encode 所需的时间, 右图为梯度 Decode 所需的时间*
 
+![Alt text](image-6.png)
+*ResNet50 中, 大部分 Tensor 的大小都不足 4MB*
+
 还是论文中的测试环境, 对于 128KB 的 Tensor, DGC 算法的编码延迟在 0.4ms 左右. 如果有 10 个这样大小的 Tensor, 按层次压缩需要进行 10 次独立的编码操作,总编码延迟为 10 * 0.4ms = 4ms.
 
 但是如果将这 10 个 128KB 的 Tensor 融合后一起编码, 由于固定开销的存在, 总的编码延迟还是 0.4ms, 比分别编码要少很多.
@@ -54,3 +60,27 @@ DDP 训练中存在以下问题:
 因此, **如果重新排列梯度的计算-压缩-通信顺序**, 将多个梯度融合后一起压缩, 可以大幅减少压缩的开销.
 
 ## Cupcake
+### Cupcake 的问题定义
+
+论文将确定最优的 Tensor Fusion 策略形式化为一个 Optimization Problem. 
+
+给定有 $N$ 个张量,记为 $T = \{T_0, ..., T_{N-1}\}$. Cupcake 将其分成 $y$ 组,第i组记为 $x_i$ , $X_y = \{x_0, ..., x_{y-1}\}$ 表示具体的融合策略.
+
+对于第 $i$ 组 $x_i$,设其压缩时间为 $h(x_i)$, 通信时间为 $g(x_i)$. 前向传播时间为 $A$,第 $i$ 个张量的反向传播时间为 $B(T_i)$.
+
+考虑到通信与计算的重叠, 重叠时间记为 $P(X_y)$. 则一次迭代的时间可以表示为:
+
+$$
+f(X_y) = A + \sum_{i=0}^{N-1}B(T_i) + \sum_{i=0}^{y-1} h(x_i) + \sum_{i=0}^{y-1} g(x_i) - P(X_y)
+$$
+
+那么最优融合策略的确定可以形式化为:
+
+$$
+\min_{X_y} f(X_y)
+$$
+
+即寻找使迭代时间最小的张量分组方案.
+
+### 
+
