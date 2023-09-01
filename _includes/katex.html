@@ -20,10 +20,9 @@ onload="renderMathInElement(document.body, {
 });"></script>
 
 <script>
-  renderMathInElement(document.body,{delimiters: [
-            {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false}
-]});</script>
+  renderMathInElement(document.body,{delimiters: {left: "$$", right: "$$", display: true}});
+  renderMathInElement(document.body,{delimiters: {left: "$", right: "$", display: false}});
+</script>
 
 <!-- The KaTeX default is 1.21em, see https://katex.org/docs/font.html#font-size-and-lengths -->
 <style>
