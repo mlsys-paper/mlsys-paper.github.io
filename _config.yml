@@ -2,7 +2,6 @@ title: Read MLSys Papers
 description: A starter template for a Jeykll site using the Just the Docs theme!
 theme: just-the-docs
 favicon: /favicon.ico
-latex: mathjax
 
 url: https://mlsys-paper.github.io
 
