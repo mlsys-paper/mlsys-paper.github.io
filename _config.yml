@@ -11,10 +11,3 @@ aux_links:
 compress_html:
   blanklines: false
 
-kramdown:
-  math_engine: katex
-  katex:
-    delimiters:
-      - { left: "$$", right: "$$", display: true }
-      - { left: "$", right: "$", display: false }
-
