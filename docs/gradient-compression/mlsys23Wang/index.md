@@ -10,6 +10,7 @@ discuss: true
 [Paper link](https://proceedings.mlsys.org/paper_files/paper/2023/hash/f67b34cb0f0d24b6226178aa6a649cc4-Abstract-mlsys2023.html)
 
 ## Abstract
+
 数据并行分布式训练 (DDP) 中, 梯度同步的通信 (All-reduce) 成为主要的效率瓶颈. 许多工作提出梯度压缩 (Gradient Compression) 来减少通信数据量, 从而解决这个瓶颈. 不过, 很多梯度压缩算法只有在 DDP 中取得了微小的性能提升, 甚至有些算法反而损害了性能. 问题的关键在于, 使用传统的 Layerwise 梯度传输方法, 压缩梯度存在额外开销. 
 
 ![Alt text](image-1.png)
@@ -19,6 +20,7 @@ discuss: true
 
 ## Background
 ### Distributed Data Parallelism 中存在的问题
+
 DDP 训练中存在以下问题:
 1. **通信与计算不平衡.** GPU 计算能力的快速提升导致单个 GPU 的迭代计算时间大幅下降, 而网络带宽的提升速度跟不上计算能力的提升速度, 导致计算和通信之间的不平衡.
 2. **梯度同步的通信是主要的效率瓶颈.** 随着参与训练的 GPU 数量增加,需要同步的梯度数据量也线性增长, 导致梯度同步的通信时间占用训练时间的很大一部分.
@@ -27,6 +29,7 @@ DDP 训练中存在以下问题:
 3. **全精度(32位浮点数)的梯度通信带来大量的通信时间.**
 
 ### Gradient Compression 中存在的问题
+
 为了缓解 DDP 训练中的通信瓶颈, 通过梯度稀疏化或量化可以大幅降低同步的流量, 减少通信时间. 但是, 由于梯度稀疏化和量化的计算开销, 实际的训练速度并没有得到提升.
 
 ![Alt text](image-3.png)
@@ -39,7 +42,7 @@ DDP 训练中存在以下问题:
 ![Alt text](image.png)
 *图 (c) 中梯度压缩的时间不能被忽略, 而且压缩算法需要额外的编码和解码运算, 还会占用 GPU 的计算资源*
 
-其次, 梯度压缩的开销还出在压缩算法的 CUDA Kernel Launch Time, 对于小的 Gradient Tensor, 这个开销可能会占据大部分的时间. 以论文中测试的环境为例, 当tensor大小小于4MB时, 压缩的编码和解码延迟保持常数不变. 当tensor大小超过4MB时, 压缩延迟才会随着tensor大小线性增加.
+其次, 梯度压缩的开销还出在压缩算法的 CUDA Kernel Launch Time, 对于小的 Gradient Tensor, 这个开销可能会占据大部分的时间. 以论文中测试的环境为例, 当 Tensor 大小小于 4MB 时, 压缩的编码和解码延迟保持常数不变. 当 Tensor 大小超过 4MB 时, 压缩延迟才会随着 Tensor 大小线性增加.
 
 ![Alt text](image-4.png)
 *左图为梯度 Encode 所需的时间, 右图为梯度 Decode 所需的时间*
