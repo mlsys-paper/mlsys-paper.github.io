@@ -4,7 +4,7 @@ parent: Gradient Compression
 title: "Cupcake: A Compression Scheduler for Scalable Communication-Efficient Distributed Training"
 nav_order: 1
 discuss: true
-mathjax: true
+math: katex
 ---
 
 # Cupcake: A Compression Scheduler for Scalable Communication-Efficient Distributed Training
