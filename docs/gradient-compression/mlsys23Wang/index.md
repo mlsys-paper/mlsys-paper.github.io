@@ -83,7 +83,7 @@ DDP 训练中存在以下问题:
 
 论文将确定最优的 Tensor Fusion 策略形式化为一个 Optimization Problem. 
 
-给定有 $N$ 个张量,记为 $T = \{T_0, ..., T_{N-1}\}$. Cupcake 将其分成 $y$ 组,第 $i$ 组记为 $x_i$ , $X_y = \{x_0, ..., x_{y-1}\}$ 表示具体的融合策略.
+给定有 $N$ 个张量,记为 $T = \begin{Bmatrix}T_0, ..., T_{N-1}\end{Bmatrix}$. Cupcake 将其分成 $y$ 组,第 $i$ 组记为 $x_i$ , $X_y = \begin{Bmatrix}x_0, ..., x_{y-1}\end{Bmatrix}$ 表示具体的融合策略.
 
 对于第 $i$ 组 $x_i$,设其压缩时间为 $h(x_i)$, 通信时间为 $g(x_i)$. 前向传播时间为 $A$, 第 $i$ 个张量的反向传播时间为 $B(T_i)$.
 
@@ -101,8 +101,9 @@ $$
 
 即寻找使迭代时间最小的 Tensor Fusion 方案.
 
-![Alt text](image-9.png)
-*寻找最优 Tensor Fusion 方案*
+|![Alt text](image-9.png)|
+|:--:|
+|*寻找最优 Tensor Fusion 方案*|
 
 此外, 通信时间 $g(x_i)$ 和压缩时间 $h(x_i)$ 还被建模为
 $$
@@ -111,14 +112,18 @@ $$
 其中 $\alpha_g$ 是每个 Tensor 的启动时间, $\beta_g$ 是单位数据的传输时间.
 
 $$h(x_i) = \alpha_h + \beta_h x_i,$$
-其中 $\alpha_h$ 是 CUDA 的固定启动开销, $\beta_h$ 是单位数据的压缩时间.
+其中 $\alpha_h$ 是 CUDA 的固定启动开销, $\beta_h$ 是单位数据的压缩时间. <span style="color:orchid"><b>这里我觉得应该是错了</b></span>
 
-由于直接表达迭代时间$f(X_y)$中的重叠时间$P(X_y)$比较困难,改为递归的方式表达:
-设$F(M, i)$表示从$T_i$到$T_{N-1}$的最优策略所对应的迭代时间,其中$M$表示$T_0$到$T_{i-1}$的策略。则有:
+由于直接表达迭代时间 $f(X_y)$ 中的重叠时间 $P(X_y)$ 比较困难,改为递归的方式表达:
+设 $F(M, i)$ 表示从 $T_i$ 到 $T_{N-1}$ 的最优策略所对应的迭代时间,其中 $M$ 表示 $T_0$ 到 $T_{i-1}$ 的策略。则有:
 
-$F(\varnothing, 0) = \min\limits_{1\leq i \leq N} F(\text{fuse}(0,i-1), i)$
+$$
+F(\varnothing, 0) = \min\limits_{1\leq i \leq N} F(\begin{Bmatrix}\text{fuse}(0,i-1)\end{Bmatrix}, i)
+$$
 
-$F(M, i) = \min\limits_{i+1\leq j \leq N} F(M + \text{fuse}(i,j-1), j)$
+$$
+F(M, i) = \min\limits_{i+1\leq j \leq N} F(M + \begin{Bmatrix}\text{fuse}(i,j-1)\end{Bmatrix}, j)
+$$
 
-以递归的方式寻找全局最优策略。
+以递归的方式寻找全局最优策略.
 
