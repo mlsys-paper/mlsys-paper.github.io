@@ -106,12 +106,17 @@ $$
 |*寻找最优 Tensor Fusion 方案*|
 
 此外, 通信时间 $g(x_i)$ 和压缩时间 $h(x_i)$ 还被建模为
+
 $$
 g(x_i) = \alpha_g + \beta_g x_i,
 $$
+
 其中 $\alpha_g$ 是每个 Tensor 的启动时间, $\beta_g$ 是单位数据的传输时间.
 
-$$h(x_i) = \alpha_h + \beta_h x_i,$$
+$$
+h(x_i) = \alpha_h + \beta_h x_i,
+$$
+
 其中 $\alpha_h$ 是 CUDA 的固定启动开销, $\beta_h$ 是单位数据的压缩时间. <span style="color:orchid"><b>这里我觉得应该是错了</b></span>
 
 由于直接表达迭代时间 $f(X_y)$ 中的重叠时间 $P(X_y)$ 比较困难,改为递归的方式表达:
